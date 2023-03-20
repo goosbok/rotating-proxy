@@ -1,0 +1,14 @@
+services:
+  rotating-proxy:
+    build: .
+    environment:
+      tors: 25
+    ports:
+      - 127.0.0.1:5566:5566
+      - 127.0.0.1:4444:4444
+
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--proxy", "http://localhost:5566/", "https://api.my-ip.io/ip"]
+      interval: 10s
+      timeout: 10s
+      retries: 5

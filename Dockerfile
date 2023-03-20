@@ -1,9 +1,9 @@
 FROM ubuntu:14.04
 MAINTAINER Matthias Kadenbach <matthias.kadenbach@gmail.com>
 
-RUN echo 'deb http://deb.torproject.org/torproject.org trusty main' | tee /etc/apt/sources.list.d/torproject.list
-RUN gpg --keyserver keys.gnupg.net --recv 886DDD89
-RUN gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+#RUN echo 'deb http://deb.torproject.org/torproject.org trusty main' | tee /etc/apt/sources.list.d/torproject.list
+#RUN gpg --keyserver keys.gnupg.net --recv 886DDD89
+#RUN gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
 
 RUN echo 'deb http://ppa.launchpad.net/brightbox/ruby-ng/ubuntu trusty main' | tee /etc/apt/sources.list.d/ruby.list
 RUN gpg --keyserver keyserver.ubuntu.com --recv C3173AA6

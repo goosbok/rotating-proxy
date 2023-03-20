@@ -1,51 +1,34 @@
-docker-rotating-proxy
-=====================
+# TorProxy
+## Источник
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/mattes/rotating-proxy.svg)](https://hub.docker.com/r/mattes/rotating-proxy/)
+Эта репа [форк](https://github.com/mattes/rotating-proxy) данного технологического чуда.
 
-```
-               Docker Container
-               -------------------------------------
-                        <-> Polipo 1 <-> Tor Proxy 1
-Client <---->  HAproxy  <-> Polipo 2 <-> Tor Proxy 2
-                        <-> Polipo n <-> Tor Proxy n
-```
+## Что умеет
 
-__Why:__ Lots of IP addresses. One single endpoint for your client.
-Load-balancing by HAproxy.
+Поднимаем сервер для маршрутизации запросов через сервера TORа. Число серверов меняетя в переменной tors в compose.yaml.
 
-Usage
------
+При каждом запросе через сервер мы получаем один из путей маршрутизации, что означает что мы под каждый запрос получает новый IP.
 
-```bash
-# build docker container
-docker build -t mattes/rotating-proxy:latest .
+## Как поднять
 
-# ... or pull docker container
-docker pull mattes/rotating-proxy:latest
+	make build
+	make up
+	# чтобы остановить:
+	make stop
 
-# start docker container
-docker run -d -p 5566:5566 -p 4444:4444 --env tors=25 mattes/rotating-proxy
+## Пример использования:
+Пример приведу на python библиотека requests
 
-# test with ...
-curl --proxy 127.0.0.1:5566 https://api.my-ip.io/ip
+	import requests
 
-# monitor
-http://127.0.0.1:4444/haproxy?stats
-```
+	scheme_proxy_map = {
+	    'http': '127.0.0.1:5566',
+	    'https': '127.0.0.1:5566',
+	}
+	
+	
+	response = requests.get('https://ip.oxylabs.io/ip', proxies=scheme_proxy_map)
+	print(response.text)
 
 
-Further Readings
-----------------
-
- * [Tor Manual](https://www.torproject.org/docs/tor-manual.html.en)
- * [Tor Control](https://www.thesprawl.org/research/tor-control-protocol/)
- * [HAProxy Manual](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html)
- * [Polipo](http://www.pps.univ-paris-diderot.fr/~jch/software/polipo/)
-
---------------
-
-Please note: Tor offers a SOCKS Proxy only. In order to allow communication
-from HAproxy to Tor, Polipo is used to translate from HTTP proxy to SOCKS proxy.
-HAproxy is able to talk to HTTP proxies only.
-
+При каждом выполнении запроса мы будем получать один из поднятых IP.
