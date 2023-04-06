@@ -1,6 +1,6 @@
 services:
   rotating-proxy:
-    build: .
+    image: mattes/rotating-proxy:latest
     environment:
       tors: 25
     ports:
